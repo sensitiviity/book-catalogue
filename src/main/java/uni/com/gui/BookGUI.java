@@ -11,6 +11,11 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Constructs the graphical interface and initializes all UI components.
+ *
+ * <p>Creates the catalogue instance and prepares the graphical interface by initializing components, layouts, event listeners and table data.</p>
+ */
 public class BookGUI extends JFrame {
     private Catalogue catalogue;
 
@@ -20,6 +25,9 @@ public class BookGUI extends JFrame {
     private JTextField titleField, authorField, publisherField, yearField, genreField, searchField;
     private JButton addButton, deleteButton, updateButton, saveButton, loadButton, searchButton, resetSearchButton;
 
+    /**
+     * Constructs the GUI, initializes all components, layout, event listeners, and loads initial data.
+     */
     public BookGUI() {
         catalogue = new Catalogue();
 
@@ -32,6 +40,7 @@ public class BookGUI extends JFrame {
         setVisible(true);
     }
 
+    /**Initializes all Swing components including text fields, buttons, and table.*/
     private void initComponents() {
         titleField = new JTextField(30);
         authorField = new JTextField(30);
@@ -53,6 +62,7 @@ public class BookGUI extends JFrame {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     }
 
+    /**Arranges all components in panels and sets up the layout*/
     private void initLayout() {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -94,6 +104,7 @@ public class BookGUI extends JFrame {
         setContentPane(mainPanel);
     }
 
+    /**Configures JFrame settings such as title, size, default close operation, and location.*/
     private void initFrameSettings() {
         setTitle("Book catalogue");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -101,6 +112,7 @@ public class BookGUI extends JFrame {
         setLocationRelativeTo(null);
     }
 
+    /**Registers event listeners for all buttons in the interface.*/
     private void addActionListeners() {
         addButton.addActionListener(e -> addBook());
         deleteButton.addActionListener(e -> removeBook());
@@ -111,6 +123,7 @@ public class BookGUI extends JFrame {
         resetSearchButton.addActionListener(e -> refreshTable());
     }
 
+    /**Refreshes the table content with all books from the catalogue*/
     private void refreshTable() {
         tableModel.setRowCount(0);
         List<Publication> list = catalogue.getAllPublications();
@@ -120,6 +133,7 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /** Adds a new book to the catalogue using input from text fields. */
     private void addBook() {
         try{
             Book book = createBookFromFields();
@@ -131,6 +145,11 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /**
+     * Creates a Book object from input fields.
+     * @return a new Book instance
+     * @throws IllegalArgumentException if any field is empty or invalid
+     */
     private Book createBookFromFields() {
         String title = titleField.getText().trim();
         String author = authorField.getText().trim();
@@ -156,6 +175,7 @@ public class BookGUI extends JFrame {
         return new Book(title, year, author, publisher, genre);
     }
 
+    /**Removes a book from the catalogue based on the title input field*/
     private void removeBook() {
         try{
             String title = titleField.getText().trim();
@@ -171,6 +191,7 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /**Updates an existing book in the catalogue using input from text fields.*/
     private void updateBook() {
         try {
             String title = titleField.getText().trim();
@@ -224,6 +245,7 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /**Saves the catalogue to a file*/
     private void saveToFile() {
         try{
             catalogue.saveToFile("books.dat");
@@ -233,6 +255,7 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /** Loads the catalogue from a file and refreshes the table.*/
     private void loadFromFile() {
         try{
             catalogue.loadFromFile("books.dat");
@@ -244,6 +267,7 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /**Filters the table based on the search text field input.*/
     private void searchBook(){
         String search = searchField.getText().toLowerCase();
         tableModel.setRowCount(0);
@@ -257,6 +281,7 @@ public class BookGUI extends JFrame {
         }
     }
 
+    /** Clears all input fields.*/
     private void clearFields() {
         titleField.setText("");
         authorField.setText("");

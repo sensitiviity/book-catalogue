@@ -1,14 +1,29 @@
 package uni.com.model;
 
+/**
+ * Represents a book and extends the base Publication class.
+ *
+ * <p>Extends Publication class, contains author, publisher and genre.</p>
+ */
 public class Book extends Publication {
     private String author;
     private String publisher;
     private String genre;
 
     //constructors
+    /** Default constructor */
     public Book() {
     }
 
+    /**
+     * Constructs a new Book.
+     *
+     * @param title book title
+     * @param year publication year
+     * @param author book author
+     * @param publisher publisher name
+     * @param genre book genre
+     */
     public Book(String title, int year, String author, String publisher, String genre) {
         super(title, year);
         this.author = author;

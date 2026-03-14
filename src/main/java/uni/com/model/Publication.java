@@ -2,6 +2,11 @@ package uni.com.model;
 
 import java.io.Serializable;
 
+/**
+ * Base class representing a general publication.
+ *
+ * <p>Contains title and year and implements Serializable.</p>
+ */
 public class Publication implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -9,9 +14,16 @@ public class Publication implements Serializable {
     private int year;
 
     //constructors
+    /** Default constructor */
     public Publication() {
     }
 
+    /**
+     * Constructs a publication with specified title and year.
+     *
+     * @param title publication title
+     * @param year publication year
+     */
     public Publication(String title, int year) {
         this.title = title;
         this.year = year;

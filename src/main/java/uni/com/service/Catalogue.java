@@ -9,13 +9,25 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service class responsible for managing the collection of publications.
+ *
+ * <p>Stores publications in a list and provides methods for adding, removing, searching and updating books,
+ * also supports serialization and deserialization.</p>
+ */
 public class Catalogue {
     private List<Publication> publications;
 
+    /** Creates an empty catalogue */
     public Catalogue() {
         publications = new ArrayList<>();
     }
 
+    /**
+     * Adds a publication to the catalogue.
+     *
+     * @param p publication object
+     */
     public void addPublication(Publication p) {
         if (p != null) {
             publications.add(p);
@@ -24,6 +36,12 @@ public class Catalogue {
         }
     }
 
+    /**
+     * Removes a publication by its title.
+     *
+     * @param title title of the publication
+     * @throws BookNotFoundException if the book is not found
+     */
     public void removePublicationByTitle(String title) throws BookNotFoundException {
         if (title == null || title.trim().isEmpty()) {
             throw new BookNotFoundException("The name cannot be empty");
@@ -42,6 +60,12 @@ public class Catalogue {
         }
     }
 
+    /**
+     * Searches for a publication by title.
+     *
+     * @param title title to search
+     * @return publication if found, otherwise null
+     */
     public Publication findPublicationByTitle(String title) {
         if (title == null || title.trim().isEmpty()) {
             return null;
@@ -56,6 +80,11 @@ public class Catalogue {
         return null;
     }
 
+    /**
+     * Returns all publications in the catalogue.
+     *
+     * @return list of publications
+     */
     public List<Publication> getAllPublications() {
         List<Publication> copy = new ArrayList<>();
         for (Publication p : publications) {
@@ -66,6 +95,12 @@ public class Catalogue {
         return copy;
     }
 
+    /**
+     * Saves the catalogue to a file using serialization.
+     *
+     * @param filename destination file
+     * @throws IOException if writing fails
+     */
     public void saveToFile(String filename) throws IOException {
         if (filename == null || filename.trim().isEmpty()) {
             throw new IOException("The file name cannot be empty");
@@ -77,6 +112,13 @@ public class Catalogue {
         }
     }
 
+    /**
+     * Loads catalogue data from a file.
+     *
+     * @param filename file to read
+     * @throws IOException if file reading fails
+     * @throws ClassNotFoundException if data format is incorrect
+     */
     public void loadFromFile(String filename) throws IOException, ClassNotFoundException {
         if (filename == null || filename.trim().isEmpty()) {
             throw new IOException("The file name cannot be empty");
