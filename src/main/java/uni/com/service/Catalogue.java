@@ -1,8 +1,11 @@
 package uni.com.service;
 
 import uni.com.model.Publication;
+import uni.com.exception.BookNotFoundException;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,23 +20,25 @@ public class Catalogue {
         if (p != null) {
             publications.add(p);
         } else {
-            System.err.println("Помилка: не можна додати null публікацію");
+            System.err.println("Error: cannot add null publication");
         }
     }
 
-    public void removePublicationByTitle(String title) throws Exception {
+    public void removePublicationByTitle(String title) throws BookNotFoundException {
         if (title == null || title.trim().isEmpty()) {
-            throw new Exception("Назва не може бути порожньою");
+            throw new BookNotFoundException("The name cannot be empty");
         }
 
         Publication found = findPublicationByTitle(title);
         if (found == null) {
-            throw new Exception(title.trim());
+            throw new BookNotFoundException("A book called '" + title + "' was not found");
         }
 
         boolean removed = publications.remove(found);
         if (!removed) {
-            System.err.println("Помилка: не вдалося видалити книгу '" + title + "'");
+            System.err.println("Error: failed to delete book '" + title + "'");
+        }else{
+            System.out.println("Book removed successfully");
         }
     }
 
@@ -63,50 +68,25 @@ public class Catalogue {
 
     public void saveToFile(String filename) throws IOException {
         if (filename == null || filename.trim().isEmpty()) {
-            throw new IOException("Ім'я файлу не може бути порожнім");
+            throw new IOException("The file name cannot be empty");
         }
 
-        FileOutputStream fileOut = null;
-        ObjectOutputStream out = null;
-        try {
-            fileOut = new FileOutputStream(filename.trim());
-            out = new ObjectOutputStream(fileOut);
+        try (ObjectOutputStream out = new ObjectOutputStream(Files.newOutputStream(Paths.get(filename.trim())))) {
             out.writeObject(new ArrayList<>(publications));
-            System.out.println("Каталог збережено у файл: " + filename);
-        } catch (IOException e) {
-            throw new IOException("Помилка збереження каталогу: " + e.getMessage(), e);
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                System.err.println("Помилка закриття ObjectOutputStream: " + e.getMessage());
-            }
-            try {
-                if (fileOut != null) {
-                    fileOut.close();
-                }
-            } catch (IOException e) {
-                System.err.println("Помилка закриття FileOutputStream: " + e.getMessage());
-            }
+            System.out.println("The directory is saved to a file: " + filename);
         }
     }
 
     public void loadFromFile(String filename) throws IOException, ClassNotFoundException {
         if (filename == null || filename.trim().isEmpty()) {
-            throw new IOException("Ім'я файлу не може бути порожнім");
+            throw new IOException("The file name cannot be empty");
         }
 
-        FileInputStream fileIn = null;
-        ObjectInputStream in = null;
-        try {
-            fileIn = new FileInputStream(filename.trim());
-            in = new ObjectInputStream(fileIn);
+        try (ObjectInputStream in = new ObjectInputStream(Files.newInputStream(Paths.get(filename.trim())))) {
             @SuppressWarnings("unchecked")
             List<Publication> loadedList = (List<Publication>) in.readObject();
-
             publications.clear();
+
             if (loadedList != null) {
                 for (Publication p : loadedList) {
                     if (p != null) {
@@ -114,28 +94,14 @@ public class Catalogue {
                     }
                 }
             }
-            System.out.println("Каталог завантажено з файлу: " + filename);
+
+            System.out.println("Directory downloaded from file: " + filename);
         } catch (FileNotFoundException e) {
-            throw new IOException("Файл не знайдено: " + filename, e);
+            throw new IOException("File not found: " + filename, e);
         } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Помилка десеріалізації: " + e.getMessage(), e);
+            throw new ClassNotFoundException("Deserialization error: " + e.getMessage(), e);
         } catch (IOException e) {
-            throw new IOException("Помилка читання файлу: " + e.getMessage(), e);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-            } catch (IOException e) {
-                System.err.println("Помилка закриття ObjectInputStream: " + e.getMessage());
-            }
-            try {
-                if (fileIn != null) {
-                    fileIn.close();
-                }
-            } catch (IOException e) {
-                System.err.println("Помилка закриття FileInputStream: " + e.getMessage());
-            }
+            throw new IOException("Error reading file: " + e.getMessage(), e);
         }
     }
 }

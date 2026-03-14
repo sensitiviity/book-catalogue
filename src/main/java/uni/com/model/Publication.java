@@ -3,6 +3,8 @@ package uni.com.model;
 import java.io.Serializable;
 
 public class Publication implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String title;
     private int year;
 
@@ -36,6 +38,6 @@ public class Publication implements Serializable {
 
     @Override
     public String toString() {
-        return "Publication{" + "title='" + title + '\'' + ", year=" + year + '}';
+        return "Publication: " + "title='" + title + "', year=" + year;
     }
 }
