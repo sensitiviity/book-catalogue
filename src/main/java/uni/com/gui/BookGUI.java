@@ -128,8 +128,6 @@ public class BookGUI extends JFrame {
             clearFields();
         }catch(IllegalArgumentException e){
             JOptionPane.showMessageDialog(this, e.getMessage());
-        }catch(Exception e){
-            JOptionPane.showMessageDialog(this, "Error adding a book. " + e.getMessage());
         }
     }
 
@@ -137,11 +135,17 @@ public class BookGUI extends JFrame {
         String title = titleField.getText().trim();
         String author = authorField.getText().trim();
         String publisher = publisherField.getText().trim();
+        String yearText = yearField.getText().trim();
         String genre = genreField.getText().trim();
+
+        if (title.isEmpty() || author.isEmpty() || publisher.isEmpty() || genre.isEmpty() || yearText.isEmpty()) {
+            throw new IllegalArgumentException("All fields must be filled");
+        }
+
         int year;
 
         try {
-            year = Integer.parseInt(yearField.getText().trim());
+            year = Integer.parseInt(yearText);
         } catch (NumberFormatException e) {
             throw new IllegalArgumentException("Year must be a number");
         }
@@ -234,7 +238,7 @@ public class BookGUI extends JFrame {
             catalogue.loadFromFile("books.dat");
             refreshTable();
         }catch(IOException e){
-            JOptionPane.showMessageDialog(this, "File error: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage());
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, "Error loading");
         }
